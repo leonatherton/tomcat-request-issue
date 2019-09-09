@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<input id="file" type="file" />
+<input id="submit" type="submit" />
+
+
+<script type="text/javascript">
+
+    var handleUploadingProgress = function(e) {
+        var progressPercent = Math.round(e.loaded / e.total * 100);
+        console.log("Uploading: " + e.loaded + " of " + e.total + " " + progressPercent + "%");
+    };
+
+    document.getElementById('submit').addEventListener('click', function() {
+        var file = document.getElementById('file').files[0];
+        if (file.name) {
+            console.log("---------------------------");
+            console.log("POSTing " + file.name);
+
+            var xhr = new XMLHttpRequest();
+            if (xhr.upload) {
+                xhr.upload.addEventListener("progress", handleUploadingProgress, false);
+
+                xhr.onreadystatechange = function () {
+                    console.log("readyState: " + xhr.readyState);
+                    console.log("status: " + xhr.status);
+                    console.log("responseText: " + xhr.responseText);
+                    console.log("---------------------------");
+                };
+
+                xhr.open("POST", "test", true);
+                var data = new FormData();
+                data.append('file', file);
+                xhr.send(data);
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>
